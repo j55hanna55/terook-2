@@ -2,17 +2,31 @@ var path = require('path')
 var express = require('express');
 var app = express();
 
-app.use(express.urlencoded())
+var methodOverride = require('method-override')
+
+//we do this because we want PUT and DELETE methods for our routes
+	//integrate method override with express
+	// override with POST having ?_method=DELETE
+		app.use(methodOverride('_method'))
+
+
+app.use(express.urlencoded({extended : false}))
 //making static assets
 app.use(express.static("public"));
 
+
+
+
 var mysql      = require('mysql');
-var connection = mysql.createConnection({
-  host     : 'localhost',
-  user     : 'root',
-  password : 'password',
-  database : 'terook_db'
-});
+var connection = mysql.createConnection(
+	process.env.JAWSDB_URL || 
+	{
+	  host     : 'localhost',
+	  user     : 'root',
+	  password : 'password',
+	  database : 'terook_db'
+	}
+);
  
 connection.connect();
  
